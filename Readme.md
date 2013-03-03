@@ -1,6 +1,6 @@
 # Kobolmaki
 
-![Build status](https://api.travis-ci.org/manuelstofer/koboldmaki)
+![Build status](https://api.travis-ci.org/manuelstofer/koboldmaki.png)
 
 ![image](resources/koboldmaki.jpg)
 
