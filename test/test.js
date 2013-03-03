@@ -6,7 +6,7 @@ describe('koboldmaki', function () {
 
     var exampleView;
     beforeEach(function () {
-         exampleView = view({
+         var ExampleView = view({
 
             events: {
                 'custom-event a.click': 'handleCustomEvent',
@@ -30,6 +30,8 @@ describe('koboldmaki', function () {
                 this.el.innerHTML = '<div><a class="click">click</a></div>';
             }
         });
+        exampleView = ExampleView();
+
         document.body.appendChild(exampleView.el);
         exampleView.render();
     });
