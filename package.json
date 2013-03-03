@@ -1,0 +1,15 @@
+{
+    "name": "koboldmaki",
+    "version": "0.0.1",
+    "description": "views inspired by backbone, built with components only",
+    "author": "Manuel Stofer <manuel@takimata.ch>",
+    "devDependencies": {
+        "mocha": "*",
+        "chai": "*",
+        "component": "*",
+        "mocha-phantomjs": "*"
+    },
+    "scripts": {
+        "test": "make test"
+    }
+}
