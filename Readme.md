@@ -15,7 +15,7 @@ $ component install manuelstofer/koboldmaki
 
 ## Usage
 
-```
+```Javascript
 var View = require('koboldmaki');
 
 var MakiAlert = View({
