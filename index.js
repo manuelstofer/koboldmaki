@@ -11,7 +11,7 @@ var emitter = require('emitter'),
 module.exports = function (options) {
 
 
-    var obj = object.merge({}, options);
+    var obj = options;
     createDomNode(obj);
     emitter(obj);
 
