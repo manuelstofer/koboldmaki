@@ -18,7 +18,7 @@ $ component install manuelstofer/koboldmaki
 ```Javascript
 var View = require('koboldmaki');
 
-var MakiAlert = View({
+var makiAlert = View({
     events: {
         'clicked a': 'hideInTree'
     },
@@ -36,8 +36,7 @@ var MakiAlert = View({
     }
 });
 
-var instance = MakiAlert();
-document.body.appendChild(instance.el);
+document.body.appendChild(makiAlert.el);
 
 
 ```
