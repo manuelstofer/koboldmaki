@@ -35,6 +35,11 @@ describe('koboldmaki', function () {
         exampleView.render();
     });
 
+    it('should have optional events', function () {
+        var v = view({});
+        v.should.not.be.undefined;
+    });
+
     it('should run initialize', function () {
         exampleView.called.should.be.false;
     });

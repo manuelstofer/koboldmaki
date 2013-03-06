@@ -32,7 +32,7 @@ module.exports = function (options) {
     }
 
     function bindEvents () {
-        var eventHandlers = parseEventHandlers(obj.events);
+        var eventHandlers = parseEventHandlers(obj.events || {});
         each(groupBy(eventHandlers, 'name'), function (handlers, eventName) {
             bindEvent(eventName, handlers);
         });
@@ -64,8 +64,9 @@ module.exports = function (options) {
     }
 
     function parseEventHandlers () {
-        var callbacks = object.values(obj.events);
-        return map(object.keys(obj.events), function (key, index) {
+        var events = obj.events || {},
+            callbacks = object.values(events);
+        return map(object.keys(events), function (key, index) {
             var match = key.match(/^([^ ]+) (.*)$/);
             return {
                 name:       match[1],
