@@ -1,4 +1,4 @@
-# Kobolmaki
+# Koboldmaki
 
 ![Build status](https://api.travis-ci.org/manuelstofer/koboldmaki.png)
 
