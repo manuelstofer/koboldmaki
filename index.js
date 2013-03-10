@@ -28,7 +28,6 @@ module.exports = function (options) {
             if (obj.className) { classes(obj.el).add(obj.className); }
         }
         obj.viewId = randomViewId();
-        obj.el.setAttribute('x-view-id', obj.viewId);
     }
 
     function bindEvents () {
@@ -44,9 +43,11 @@ module.exports = function (options) {
                 var target   = getEventTarget(e),
                     selector = getViewSelector() + ' ' + handler.selector;
 
+                obj.el.setAttribute('x-view-id', obj.viewId);
                 if (matches(target, selector)) {
                     callEventHandler(handler.callback, e);
                 }
+                obj.el.removeAttribute('x-view-id');
             });
         });
     }
