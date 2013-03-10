@@ -12,7 +12,7 @@ module.exports = function (options) {
 
 
     var obj = options;
-    createDomNode(obj);
+    createDomNode();
     emitter(obj);
 
     if (obj.initialize) { obj.initialize.apply(obj, arguments); }
@@ -20,7 +20,7 @@ module.exports = function (options) {
 
     return obj;
 
-    function createDomNode () {
+    function createDomNode() {
         if (options && options.el) {
             obj.el = options.el;
         } else {
@@ -30,14 +30,14 @@ module.exports = function (options) {
         obj.viewId = randomViewId();
     }
 
-    function bindEvents () {
+    function bindEvents() {
         var eventHandlers = parseEventHandlers(obj.events || {});
         each(groupBy(eventHandlers, 'name'), function (handlers, eventName) {
             bindEvent(eventName, handlers);
         });
     }
 
-    function bindEvent (eventName, handlers) {
+    function bindEvent(eventName, handlers) {
         event.bind(obj.el, eventName, function (e) {
             each(handlers, function (handler) {
                 var target   = getEventTarget(e),
@@ -53,18 +53,18 @@ module.exports = function (options) {
     }
 
     function callEventHandler(handler, e) {
-        if (typeof handler == 'string') {
-            obj[handler](e)
+        if (typeof handler === 'string') {
+            obj[handler](e);
         } else {
             handler.call(obj, e);
         }
     }
 
-    function getViewSelector () {
+    function getViewSelector() {
         return '[x-view-id="' + obj.viewId + '"]';
     }
 
-    function parseEventHandlers () {
+    function parseEventHandlers() {
         var events = obj.events || {},
             callbacks = object.values(events);
         return map(object.keys(events), function (key, index) {
@@ -73,15 +73,15 @@ module.exports = function (options) {
                 name:       match[1],
                 selector:   match[2],
                 callback:   callbacks[index]
-            }
+            };
         });
     }
 
-    function randomViewId () {
+    function randomViewId() {
         return Math.random().toString(10).replace(/^0\./, '');
     }
 
-    function getEventTarget (event) {
+    function getEventTarget(event) {
         return event.target || event.srcElement;
     }
 };

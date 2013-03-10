@@ -1,12 +1,14 @@
+/*global require, chai*/
 var view = require('koboldmaki'),
     expect = chai.expect;
 
 
 describe('koboldmaki', function () {
+    'use strict';
 
     var exampleView;
     beforeEach(function () {
-         exampleView = view({
+        exampleView = view({
 
             events: {
                 'custom-event a.click': 'handleCustomEvent',
@@ -57,7 +59,8 @@ describe('koboldmaki', function () {
     });
 });
 
-function triggerEvent (element, event) {
+function triggerEvent(element, event) {
+    'use strict';
     var evt = document.createEvent('Event');
     evt.initEvent(event, true, true);
     element.dispatchEvent(evt);
