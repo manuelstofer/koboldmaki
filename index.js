@@ -1,7 +1,7 @@
 'use strict';
 var emitter = require('emitter'),
     event   = require('event'),
-    each    = require('each'),
+    each    = require('forach'),
     groupBy = require('group-by'),
     map     = require('map'),
     object  = require('object'),
