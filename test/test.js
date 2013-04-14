@@ -1,6 +1,7 @@
 /*global require, chai*/
-var view = require('koboldmaki'),
-    expect = chai.expect;
+var view    = require('koboldmaki'),
+    trigger = require('adamsanderson-trigger-event'),
+    expect  = chai.expect;
 
 
 describe('koboldmaki', function () {
@@ -48,13 +49,13 @@ describe('koboldmaki', function () {
 
     it('should call the event handler', function () {
         var el = exampleView.el.querySelector('a.click');
-        triggerEvent(el, 'custom-event');
+        trigger(el, 'custom-event', {bubbles: true});
         exampleView.called.should.be.true;
     });
 
     it('should not call other event handlers', function () {
         var el = exampleView.el.querySelector('a.click');
-        triggerEvent(el, 'custom-event');
+        trigger(el, 'custom-event', {bubbles: true});
         expect(exampleView.wrongHandler).to.be.false;
     });
 
@@ -70,9 +71,3 @@ describe('koboldmaki', function () {
     });
 });
 
-function triggerEvent(element, event) {
-    'use strict';
-    var evt = document.createEvent('Event');
-    evt.initEvent(event, true, true);
-    element.dispatchEvent(evt);
-}

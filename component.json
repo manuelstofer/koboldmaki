@@ -15,7 +15,10 @@
         "manuelstofer/foreach":       "*",
         "manuelstofer/claim":         "*"
     },
-    "development": {},
+    "development": {
+        "adamsanderson/trigger-event": "*"
+    },
+    "license": "MIT",
     "scripts": [
         "index.js"
     ]
