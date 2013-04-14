@@ -1,6 +1,6 @@
 {
     "name": "koboldmaki",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "description": "views inspired by backbone, built with components only",
     "author": "Manuel Stofer <manuel@takimata.ch>",
     "devDependencies": {
