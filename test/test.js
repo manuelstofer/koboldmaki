@@ -57,6 +57,17 @@ describe('koboldmaki', function () {
         triggerEvent(el, 'custom-event');
         expect(exampleView.wrongHandler).to.be.false;
     });
+
+    it('$ should query only for own nodes. nodes from subviews excluded', function () {
+        var outer = document.querySelector('.outer-view'),
+            inner = document.querySelector('.inner-view'),
+            outerView = view({el: outer});
+
+        view({el: inner});
+
+        outerView.$('button').length.should.equal(1);
+        outerView.$('button')[0].should.equal(document.querySelector('.outer-button'));
+    });
 });
 
 function triggerEvent(element, event) {

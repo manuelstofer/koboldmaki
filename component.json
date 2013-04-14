@@ -10,8 +10,10 @@
         "component/matches-selector": "*",
         "component/object":           "*",
         "component/map":              "*",
+        "component/query":            "*",
         "component/group-by":         "*",
-        "manuelstofer/foreach":       "*"
+        "manuelstofer/foreach":       "*",
+        "manuelstofer/claim":         "*"
     },
     "development": {},
     "scripts": [

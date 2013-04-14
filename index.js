@@ -6,7 +6,9 @@ var emitter = require('emitter'),
     map     = require('map'),
     object  = require('object'),
     matches = require('matches-selector'),
-    classes = require('classes');
+    classes = require('classes'),
+    claim   = require('claim'),
+    query   = require('query');
 
 module.exports = Koboldmaki;
 
@@ -20,11 +22,16 @@ module.exports = Koboldmaki;
 function Koboldmaki(options) {
 
 
-    var obj = options;
-    getDomNode();
-    emitter(obj);
+    var view = options,
+        isOwn = claim(view.el = getDomNode());
 
-    if (obj.initialize) { obj.initialize.apply(obj, arguments); }
+    view.viewId = randomViewId();
+    view.$ = $;
+
+    emitter(view);
+
+
+    if (view.initialize) { view.initialize.apply(view, arguments); }
     bindEvents();
 
 
@@ -32,13 +39,13 @@ function Koboldmaki(options) {
      * Gets / Creates the root dom node for the view
      */
     function getDomNode() {
+        var node;
         if (options && options.el) {
-            obj.el = options.el;
-        } else {
-            obj.el = document.createElement(obj.tagName || 'div');
-            if (obj.className) { classes(obj.el).add(obj.className); }
+            return options.el;
         }
-        obj.viewId = randomViewId();
+        node = document.createElement(view.tagName || 'div');
+        if (view.className) { classes(node).add(view.className); }
+        return node;
     }
 
     /**
@@ -48,7 +55,7 @@ function Koboldmaki(options) {
      * replace the .innerHtml without rebinding the event handlers
      */
     function bindEvents() {
-        var eventHandlers = parseEventHandlers(obj.events || {});
+        var eventHandlers = parseEventHandlers(view.events || {});
         each(groupBy(eventHandlers, 'name'), function (handlers, eventName) {
             bindEvent(eventName, handlers);
         });
@@ -61,16 +68,16 @@ function Koboldmaki(options) {
      * @param handlers
      */
     function bindEvent(eventName, handlers) {
-        event.bind(obj.el, eventName, function (e) {
+        event.bind(view.el, eventName, function (e) {
             each(handlers, function (handler) {
                 var target   = getEventTarget(e),
                     selector = getViewSelector() + ' ' + handler.selector;
 
-                obj.el.setAttribute('x-view-id', obj.viewId);
+                view.el.setAttribute('x-view-id', view.viewId);
                 if (matches(target, selector)) {
                     callEventHandler(handler.callback, e);
                 }
-                obj.el.removeAttribute('x-view-id');
+                view.el.removeAttribute('x-view-id');
             });
         });
     }
@@ -86,14 +93,14 @@ function Koboldmaki(options) {
      */
     function callEventHandler(handler, event) {
         if (typeof handler === 'string') {
-            obj[handler](event);
+            view[handler](event);
         } else {
-            handler.call(obj, event);
+            handler.call(view, event);
         }
     }
 
     function getViewSelector () {
-        return '[x-view-id="' + obj.viewId + '"]';
+        return '[x-view-id="' + view.viewId + '"]';
     }
 
     /**
@@ -114,7 +121,7 @@ function Koboldmaki(options) {
      * @returns {*}
      */
     function parseEventHandlers() {
-        var events = obj.events || {},
+        var events = view.events || {},
             callbacks = object.values(events);
         return map(object.keys(events), function (key, index) {
             var match = key.match(/^([^ ]+) (.*)$/);
@@ -145,5 +152,32 @@ function Koboldmaki(options) {
         return event.target || event.srcElement;
     }
 
-    return obj;
+    /**
+     * Selects all nodes in the view that match the selector and
+     * don't belong to a sub view
+     *
+     * @param selector
+     * @returns {Array}
+     */
+    function $(selector) {
+        return filterOwnNodes(query.all(selector, view.el));
+    }
+
+    /**
+     * Filters dom nodes that belong to a view and not to a sub view
+     *
+     * @param nodes
+     * @returns {Array}
+     */
+    function filterOwnNodes(nodes) {
+        var results = [];
+        each(nodes, function (el) {
+            if (isOwn(el)) {
+                results.push(el);
+            }
+        });
+        return results;
+    }
+
+    return view;
 }
