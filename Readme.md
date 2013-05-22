@@ -38,6 +38,4 @@ var makiAlert = View({
 });
 
 document.body.appendChild(makiAlert.el);
-
-
 ```
