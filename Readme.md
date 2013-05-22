@@ -16,6 +16,10 @@ $ component install manuelstofer/koboldmaki
 
 ## Usage
 
+Koboldmaki provides a $ method that can query for DOM inside the views root node
+using component/query. The $ method does not return any nodes that belong 
+to nested sub view.
+
 ```Javascript
 var View = require('koboldmaki');
 
