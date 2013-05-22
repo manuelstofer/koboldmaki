@@ -9,7 +9,8 @@ Views inspired by backbone, built with components only.
 ## Installation
 
 Koboldmaki can be installed with [component](https://github.com/component/component)
-```bash
+
+```
 $ component install manuelstofer/koboldmaki
 ```
 
