@@ -17,8 +17,8 @@ $ component install manuelstofer/koboldmaki
 ## Usage
 
 Its very similar to backbone.js views. One of the main differences
-is that koboldmaki views are event emitters. The way to instantiate  
-views is different as well. Koboldmaki is not class based.
+is that koboldmaki views are event emitters. The way to instantiate views is different as well. 
+Koboldmaki is not class based.
 
 ```Javascript
 var View = require('koboldmaki');
