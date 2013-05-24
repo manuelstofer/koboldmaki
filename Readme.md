@@ -16,9 +16,8 @@ $ component install manuelstofer/koboldmaki
 
 ## Usage
 
-Koboldmaki provides a $ method that can query for DOM inside the views root node
-using component/query. The $ method does not return any nodes that belong 
-to a nested sub view.
+Its very similar to backbone.js views. One of the main differences
+is that koboldmaki views are event emitters.
 
 ```Javascript
 var View = require('koboldmaki');
@@ -43,3 +42,8 @@ var makiAlert = View({
 
 document.body.appendChild(makiAlert.el);
 ```
+
+Koboldmaki provides a $ method that can query for DOM inside the views root node
+using component/query. The $ method does not return any nodes that belong 
+to a nested sub view.
+
