@@ -4,7 +4,7 @@
 
 ![image](resources/koboldmaki.jpg)
 
-Views inspired by backbone, built with components only.
+Views inspired by Backbone, built with components only.
 
 ## Installation
 
@@ -16,7 +16,7 @@ $ component install manuelstofer/koboldmaki
 
 ## Usage
 
-Its very similar to backbone.js views. One of the main differences
+Its very similar to Backbone views. One of the main differences
 is that koboldmaki views are event emitters. The way to instantiate views is different as well. 
 Koboldmaki is not class based.
 
