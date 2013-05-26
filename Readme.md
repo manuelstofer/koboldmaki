@@ -4,16 +4,21 @@
 
 ![image](resources/koboldmaki.jpg)
 
-Views inspired by backbone, built with components only.
+Views inspired by Backbone, built with components only.
 
 ## Installation
 
 Koboldmaki can be installed with [component](https://github.com/component/component)
-```bash
+
+```
 $ component install manuelstofer/koboldmaki
 ```
 
 ## Usage
+
+Its very similar to Backbone views. One of the main differences
+is that koboldmaki views are event emitters. The way to instantiate views is different as well. 
+Koboldmaki is not class based.
 
 ```Javascript
 var View = require('koboldmaki');
@@ -37,6 +42,9 @@ var makiAlert = View({
 });
 
 document.body.appendChild(makiAlert.el);
-
-
 ```
+
+Koboldmaki provides a $ method that can query for DOM inside the views root node
+using component/query. The $ method does not return any nodes that belong 
+to a nested sub view.
+
