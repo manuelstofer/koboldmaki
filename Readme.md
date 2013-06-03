@@ -17,7 +17,7 @@ $ component install manuelstofer/koboldmaki
 ## Usage
 
 Its very similar to Backbone views. One of the main differences
-is that koboldmaki views are event emitters. The way to instantiate views is different as well. 
+is that Koboldmaki views are event emitters. The way to instantiate views is different as well. 
 Koboldmaki is not class based.
 
 ```Javascript
@@ -44,7 +44,7 @@ var makiAlert = View({
 document.body.appendChild(makiAlert.el);
 ```
 
-Koboldmaki provides a $ method that can query for DOM inside the views root node
+Koboldmaki provides a $ method that can query for DOM inside the view's root node
 using component/query. The $ method does not return any nodes that belong 
 to a nested sub view.
 
