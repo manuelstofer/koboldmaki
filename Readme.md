@@ -16,7 +16,7 @@ $ component install manuelstofer/koboldmaki
 
 ## Usage
 
-Its very similar to Backbone views. One of the main differences
+It's very similar to Backbone views. One of the main differences
 is that Koboldmaki views are event emitters. The way to instantiate views is different as well. 
 Koboldmaki is not class based.
 
