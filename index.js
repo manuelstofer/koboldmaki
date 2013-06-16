@@ -1,14 +1,12 @@
 'use strict';
-var emitter = require('emitter'),
-    event   = require('event'),
-    each    = require('foreach'),
-    groupBy = require('group-by'),
-    map     = require('map'),
-    object  = require('object'),
-    matches = require('matches-selector'),
-    classes = require('classes'),
-    claim   = require('claim'),
-    query   = require('query');
+
+var emitter     = require('emitter'),
+    delegates   = require('delegates'),
+    object      = require('object'),
+    each        = require('foreach'),
+    classes     = require('classes'),
+    claim       = require('claim'),
+    query       = require('query');
 
 module.exports = Koboldmaki;
 
@@ -24,6 +22,9 @@ function Koboldmaki(options) {
 
     var view = options,
         isOwn = claim(view.el = getDomNode());
+
+    view.delegates = delegates(view.el, view);
+    view.events = view.events || {};
 
     view.viewId = randomViewId();
     view.$ = $;
@@ -55,9 +56,14 @@ function Koboldmaki(options) {
      * replace the .innerHtml without rebinding the event handlers
      */
     function bindEvents() {
-        var eventHandlers = parseEventHandlers(view.events || {});
-        each(groupBy(eventHandlers, 'name'), function (handlers, eventName) {
-            bindEvent(eventName, handlers);
+        var keys;
+
+        if (object.isEmpty(view.events)) return;
+
+        keys = object.keys(view.events);
+
+        keys.forEach(function (key) {
+            bindEvent(key, view.events[key]);
         });
     }
 
@@ -67,70 +73,8 @@ function Koboldmaki(options) {
      * @param eventName
      * @param handlers
      */
-    function bindEvent(eventName, handlers) {
-        event.bind(view.el, eventName, function (e) {
-            each(handlers, function (handler) {
-                var target   = getEventTarget(e),
-                    selector = getViewSelector() + ' ' + handler.selector;
-
-                view.el.setAttribute('x-view-id', view.viewId);
-                if (matches(target, selector)) {
-                    callEventHandler(handler.callback, e);
-                }
-                view.el.removeAttribute('x-view-id');
-            });
-        });
-    }
-
-    /**
-     * Calls a event handler
-     *
-     * Its supported to use a string containing the name of the
-     * event handler method or to register function direct as event handler
-     *
-     * @param handler
-     * @param event
-     */
-    function callEventHandler(handler, event) {
-        if (typeof handler === 'string') {
-            view[handler](event);
-        } else {
-            handler.call(view, event);
-        }
-    }
-
-    function getViewSelector () {
-        return '[x-view-id="' + view.viewId + '"]';
-    }
-
-    /**
-     * Converts the events object
-     *
-     * from
-     *  {
-     *      'click .button': 'handler'
-     *  }
-     *
-     * to
-     *  {
-     *      name: 'click',
-     *      selector: '.button',
-     *      callback: 'handler',
-     *  }
-     *
-     * @returns {*}
-     */
-    function parseEventHandlers() {
-        var events = view.events || {},
-            callbacks = object.values(events);
-        return map(object.keys(events), function (key, index) {
-            var match = key.match(/^([^ ]+) (.*)$/);
-            return {
-                name:       match[1],
-                selector:   match[2],
-                callback:   callbacks[index]
-            };
-        });
+    function bindEvent(eventSelector, method) {
+        view.delegates.bind(eventSelector, method);
     }
 
     /**
@@ -140,16 +84,6 @@ function Koboldmaki(options) {
      */
     function randomViewId() {
         return Math.random().toString(10).replace(/^0\./, '');
-    }
-
-    /**
-     * Gets the target of a dom event with IE fallback
-     *
-     * @param event
-     * @returns {*|Object}
-     */
-    function getEventTarget(event) {
-        return event.target || event.srcElement;
     }
 
     /**

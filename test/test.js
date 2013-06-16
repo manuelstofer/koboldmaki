@@ -13,6 +13,7 @@ describe('koboldmaki', function () {
 
             events: {
                 'custom-event a.click': 'handleCustomEvent',
+                'click a.click': 'onClick',
                 'custom-event h1':      'dontCall'
             },
 
@@ -27,6 +28,12 @@ describe('koboldmaki', function () {
 
             handleCustomEvent: function () {
                 this.called = true;
+
+                console.log('custom-event was triggered');
+            },
+
+            onClick: function () {
+                console.log('click event: ', arguments);
             },
 
             render: function () {
