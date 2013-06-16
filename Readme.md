@@ -48,3 +48,9 @@ Koboldmaki provides a $ method that can query for DOM inside the view's root nod
 using component/query. The $ method does not return any nodes that belong 
 to a nested sub view.
 
+### Destroying a View
+
+```Javascript
+makiAlert.destroy();
+```
+destroy method will unbind all associated events and the remove the element from the DOM.

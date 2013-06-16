@@ -28,6 +28,8 @@ function Koboldmaki(options) {
 
     view.viewId = randomViewId();
     view.$ = $;
+    view.unbindAll = unbindAll;
+    view.destroy = destroy;
 
     emitter(view);
 
@@ -75,6 +77,25 @@ function Koboldmaki(options) {
      */
     function bindEvent(eventSelector, method) {
         view.delegates.bind(eventSelector, method);
+    }
+
+    /**
+     * Unbind all events
+     */
+
+    function unbindAll() {
+        view.delegates.unbindAll();
+    }
+
+    /**
+     * Destroys the element from the DOM.
+     * Before destroy it unbinds all events associated to the current view.
+     */
+
+    function destroy () {
+        unbindAll();
+
+        view.el.remove();
     }
 
     /**
