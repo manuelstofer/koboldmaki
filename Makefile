@@ -6,7 +6,7 @@ build: install
 	@./node_modules/.bin/component-install -d
 	@./node_modules/.bin/component-build -d
 
-test:
+test: build
 	@echo runing test ...
 	@./node_modules/mocha-phantomjs/bin/mocha-phantomjs test/test-runner.html
 
