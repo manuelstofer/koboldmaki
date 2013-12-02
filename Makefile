@@ -6,8 +6,11 @@ build: install
 	@./node_modules/.bin/component-install -d
 	@./node_modules/.bin/component-build -d
 
-test: build
-	@echo test ...
+test:
+	@echo runing test ...
 	@./node_modules/mocha-phantomjs/bin/mocha-phantomjs test/test-runner.html
 
-.PHONY: test build
+clean:
+	rm -rf build components
+
+.PHONY: test build clean

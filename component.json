@@ -1,7 +1,7 @@
 {
   "name": "koboldmaki",
   "description": "views inspired by backbone, built with components only",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "keywords": [],
   "dependencies": {
     "component/emitter": "*",
@@ -10,7 +10,7 @@
     "component/query": "*",
     "manuelstofer/foreach": "*",
     "manuelstofer/claim": "*",
-    "component/delegates": "*"
+    "debianw/delegates": "*"
   },
   "development": {
     "adamsanderson/trigger-event": "*"
