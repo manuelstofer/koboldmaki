@@ -7,18 +7,25 @@ var view    = require('koboldmaki'),
 describe('koboldmaki', function () {
     'use strict';
 
-    var exampleView;
+    var exampleView
+      , views = []
+      , count = 0;
+
     beforeEach(function () {
         exampleView = view({
 
             events: {
                 'custom-event a.click': 'handleCustomEvent',
-                'custom-event h1':      'dontCall'
+                'click a.click': 'onClick',
+                'custom-event h1': 'dontCall'
             },
 
             initialize: function () {
                 this.called = false;
+                this.clicked = false;
                 this.wrongHandler = false;
+
+                count++;
             },
 
             dontCall: function () {
@@ -29,13 +36,20 @@ describe('koboldmaki', function () {
                 this.called = true;
             },
 
+            onClick: function () {
+                this.clicked = true;
+                alert('click event');
+            },
+
             render: function () {
-                this.el.innerHTML = '<div><a class="click">click</a></div>';
+                this.el.innerHTML = '<div>#'+count+' <a class="click">click here</a></div>';
             }
         });
 
         document.body.appendChild(exampleView.el);
         exampleView.render();
+
+        views.push(exampleView);
     });
 
     it('should have optional events', function () {
@@ -59,6 +73,13 @@ describe('koboldmaki', function () {
         expect(exampleView.wrongHandler).to.be.false;
     });
 
+    it('should has an id', function () {
+        var v = view()
+          , isString = 'string' === typeof v.id;
+
+        isString.should.be.true;
+    });
+
     it('$ should query only for own nodes. nodes from subviews excluded', function () {
         var outer = document.querySelector('.outer-view'),
             inner = document.querySelector('.inner-view'),
@@ -68,6 +89,24 @@ describe('koboldmaki', function () {
 
         outerView.$('button').length.should.equal(1);
         outerView.$('button')[0].should.equal(document.querySelector('.outer-button'));
+    });
+
+    it('should unbind all events for the first element', function () {
+        var el = views[0].el.querySelector('a.click');
+
+        views[0].clicked = false;
+        views[0].called = false;
+
+        views[0].unbindAll();
+
+        trigger(el, 'custom-event', {bubbles: true});
+        trigger(el, 'click', {bubbles: true});
+
+        views[0].called.should.be.false;
+    });
+
+    it('should destroy element #3', function () {
+        views[2].destroy();
     });
 });
 

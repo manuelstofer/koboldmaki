@@ -1,25 +1,23 @@
 {
-    "name": "koboldmaki",
-    "description": "views inspired by backbone, built with components only",
-    "version": "0.0.3",
-    "keywords": [],
-    "dependencies": {
-        "component/event":            "*",
-        "component/emitter":          "*",
-        "component/classes":          "*",
-        "component/matches-selector": "*",
-        "component/object":           "*",
-        "component/map":              "*",
-        "component/query":            "*",
-        "component/group-by":         "*",
-        "manuelstofer/foreach":       "*",
-        "manuelstofer/claim":         "*"
-    },
-    "development": {
-        "adamsanderson/trigger-event": "*"
-    },
-    "license": "MIT",
-    "scripts": [
-        "index.js"
-    ]
+  "name": "koboldmaki",
+  "description": "views inspired by backbone, built with components only",
+  "version": "0.0.4",
+  "keywords": [],
+  "dependencies": {
+    "component/emitter": "*",
+    "component/classes": "*",
+    "component/object": "*",
+    "component/query": "*",
+    "manuelstofer/foreach": "*",
+    "manuelstofer/claim": "*",
+    "debianw/delegates": "*",
+    "gjohnson/uuid": "*"
+  },
+  "development": {
+    "adamsanderson/trigger-event": "*"
+  },
+  "license": "MIT",
+  "scripts": [
+    "index.js"
+  ]
 }

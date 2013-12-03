@@ -1,16 +1,37 @@
 'use strict';
-var emitter = require('emitter'),
-    event   = require('event'),
-    each    = require('foreach'),
-    groupBy = require('group-by'),
-    map     = require('map'),
-    object  = require('object'),
-    matches = require('matches-selector'),
-    classes = require('classes'),
-    claim   = require('claim'),
-    query   = require('query');
+
+var Emitter     = require('emitter'),
+    delegates   = require('delegates'),
+    object      = require('object'),
+    each        = require('foreach'),
+    classes     = require('classes'),
+    claim       = require('claim'),
+    query       = require('query'),
+    uuid        = require('uuid');
+
+/**
+ * Expose.
+ */
 
 module.exports = Koboldmaki;
+
+/**
+ * Mixin option methods.
+ */
+
+function mixin(obj, options) {
+  var keys = Object.keys(options)
+    , proto = obj.constructor.prototype;
+
+  keys.forEach(function (key) {
+    if ('function' === typeof options[key]) {
+      proto[key] = options[key];
+    }
+    else {
+      obj[key] = options[key];
+    }
+  });
+}
 
 /**
  * Creates a view similar to backbone views
@@ -19,165 +40,136 @@ module.exports = Koboldmaki;
  * @returns {*}
  * @constructor
  */
+
 function Koboldmaki(options) {
+  if (!(this instanceof Koboldmaki)) return new Koboldmaki(options);
+  
+  // mixin
+  mixin(this, options || {});
 
+  this.events = this.events || {};
+  this.id = 'view-'+uuid();
+  this.el = this.getDomNode();
+  this.delegates = delegates(this.el, this);
+  this.isOwn = claim(this.el);
 
-    var view = options,
-        isOwn = claim(view.el = getDomNode());
+  // run initialize
+  if (this.initialize) { this.initialize(); }
 
-    view.viewId = randomViewId();
-    view.$ = $;
-
-    emitter(view);
-
-
-    if (view.initialize) { view.initialize.apply(view, arguments); }
-    bindEvents();
-
-
-    /**
-     * Gets / Creates the root dom node for the view
-     */
-    function getDomNode() {
-        var node;
-        if (options && options.el) {
-            return options.el;
-        }
-        node = document.createElement(view.tagName || 'div');
-        if (view.className) { classes(node).add(view.className); }
-        return node;
-    }
-
-    /**
-     * Binds the events handlers
-     *
-     * Events are all bound on the root element, this allows to
-     * replace the .innerHtml without rebinding the event handlers
-     */
-    function bindEvents() {
-        var eventHandlers = parseEventHandlers(view.events || {});
-        each(groupBy(eventHandlers, 'name'), function (handlers, eventName) {
-            bindEvent(eventName, handlers);
-        });
-    }
-
-    /**
-     * Binds a event handler
-     *
-     * @param eventName
-     * @param handlers
-     */
-    function bindEvent(eventName, handlers) {
-        event.bind(view.el, eventName, function (e) {
-            each(handlers, function (handler) {
-                var target   = getEventTarget(e),
-                    selector = getViewSelector() + ' ' + handler.selector;
-
-                view.el.setAttribute('x-view-id', view.viewId);
-                if (matches(target, selector)) {
-                    callEventHandler(handler.callback, e);
-                }
-                view.el.removeAttribute('x-view-id');
-            });
-        });
-    }
-
-    /**
-     * Calls a event handler
-     *
-     * Its supported to use a string containing the name of the
-     * event handler method or to register function direct as event handler
-     *
-     * @param handler
-     * @param event
-     */
-    function callEventHandler(handler, event) {
-        if (typeof handler === 'string') {
-            view[handler](event);
-        } else {
-            handler.call(view, event);
-        }
-    }
-
-    function getViewSelector () {
-        return '[x-view-id="' + view.viewId + '"]';
-    }
-
-    /**
-     * Converts the events object
-     *
-     * from
-     *  {
-     *      'click .button': 'handler'
-     *  }
-     *
-     * to
-     *  {
-     *      name: 'click',
-     *      selector: '.button',
-     *      callback: 'handler',
-     *  }
-     *
-     * @returns {*}
-     */
-    function parseEventHandlers() {
-        var events = view.events || {},
-            callbacks = object.values(events);
-        return map(object.keys(events), function (key, index) {
-            var match = key.match(/^([^ ]+) (.*)$/);
-            return {
-                name:       match[1],
-                selector:   match[2],
-                callback:   callbacks[index]
-            };
-        });
-    }
-
-    /**
-     * Generates a random id for the view
-     *
-     * @returns {string}
-     */
-    function randomViewId() {
-        return Math.random().toString(10).replace(/^0\./, '');
-    }
-
-    /**
-     * Gets the target of a dom event with IE fallback
-     *
-     * @param event
-     * @returns {*|Object}
-     */
-    function getEventTarget(event) {
-        return event.target || event.srcElement;
-    }
-
-    /**
-     * Selects all nodes in the view that match the selector and
-     * don't belong to a sub view
-     *
-     * @param selector
-     * @returns {Array}
-     */
-    function $(selector) {
-        return filterOwnNodes(query.all(selector, view.el));
-    }
-
-    /**
-     * Filters dom nodes that belong to a view and not to a sub view
-     *
-     * @param nodes
-     * @returns {Array}
-     */
-    function filterOwnNodes(nodes) {
-        var results = [];
-        each(nodes, function (el) {
-            if (isOwn(el)) {
-                results.push(el);
-            }
-        });
-        return results;
-    }
-
-    return view;
+  this.bindEvents();
 }
+
+// mixin
+Emitter(Koboldmaki);
+
+/**
+ * Gets / Creates the root dom node for the view
+ */
+
+Koboldmaki.prototype.getDomNode = function () {
+  var node
+    , el = this.el;
+
+  if (el) {
+      el.dataset.id = this.id;
+      return el;
+  }
+
+  node = document.createElement(this.tagName || 'div');
+  if (this.className) { 
+    classes(node).add(this.className); 
+  }
+
+  if (this.id) {
+    node.dataset.id = this.id;
+  }
+
+  return node;
+};
+
+/**
+ * Binds the events handlers
+ *
+ * Events are all bound on the root element, this allows to
+ * replace the .innerHtml without rebinding the event handlers
+ */
+
+Koboldmaki.prototype.bindEvents = function () {
+  var self = this
+    , events = this.events
+    , keys;
+
+  if (object.isEmpty(events)) return;
+
+  keys = object.keys(events);
+
+  keys.forEach(function (key) {
+      self.bindEvent(key, events[key]);
+  });
+};
+
+/**
+ * Binds a event handler
+ *
+ * @param eventName
+ * @param handlers
+ */
+
+Koboldmaki.prototype.bindEvent = function (eventSelector, method) {
+  this.delegates.bind(eventSelector, method);
+};
+
+/**
+ * Unbind all events
+ */
+
+Koboldmaki.prototype.unbindAll = function () {
+  this.delegates.unbindAll();
+};
+
+/**
+ * Destroys the element from the DOM.
+ * Before destroy it unbinds all events associated to the current view.
+ */
+
+Koboldmaki.prototype.destroy = function () {
+  var el = this.el
+    , parent;
+
+  this.unbindAll();
+
+  parent = el.parentNode;
+  parent.removeChild(el);
+};
+
+/**
+ * Selects all nodes in the view that match the selector and
+ * don't belong to a sub view
+ *
+ * @param selector
+ * @returns {Array}
+ */
+
+Koboldmaki.prototype.$ = function (selector) {
+  return this.filterOwnNodes(query.all(selector, this.el));
+};
+
+/**
+ * Filters dom nodes that belong to a view and not to a sub view
+ *
+ * @param nodes
+ * @returns {Array}
+ */
+
+Koboldmaki.prototype.filterOwnNodes = function (nodes) {
+  var self = this
+    , results = [];
+
+  each(nodes, function (el) {
+      if (self.isOwn(el)) {
+          results.push(el);
+      }
+  });
+
+  return results;
+};
