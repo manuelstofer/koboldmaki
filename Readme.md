@@ -1,6 +1,6 @@
 # Koboldmaki
 
-![Build status](https://api.travis-ci.org/manuelstofer/koboldmaki.png)
+[![Build Status](https://travis-ci.org/debianw/koboldmaki.png?branch=master)](https://travis-ci.org/debianw/koboldmaki)
 
 ![image](resources/koboldmaki.jpg)
 
