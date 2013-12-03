@@ -6,7 +6,8 @@ var Emitter     = require('emitter'),
     each        = require('foreach'),
     classes     = require('classes'),
     claim       = require('claim'),
-    query       = require('query');
+    query       = require('query'),
+    uuid        = require('uuid');
 
 /**
  * Expose.
@@ -33,16 +34,6 @@ function mixin(obj, options) {
 }
 
 /**
- * Generates a random id for the view
- *
- * @returns {string}
- */
-
-function randomViewId () {
-  return Math.random().toString(10).replace(/^0\./, '');
-}
-
-/**
  * Creates a view similar to backbone views
  *
  * @param options
@@ -54,16 +45,13 @@ function Koboldmaki(options) {
   if (!(this instanceof Koboldmaki)) return new Koboldmaki(options);
   
   // mixin
-  mixin(this, options);
+  mixin(this, options || {});
 
   this.events = this.events || {};
-
+  this.id = 'view-'+uuid();
   this.el = this.getDomNode();
   this.delegates = delegates(this.el, this);
   this.isOwn = claim(this.el);
-
-  // uuid
-  this.viewId = randomViewId();
 
   // run initialize
   if (this.initialize) { this.initialize(); }
@@ -79,15 +67,21 @@ Emitter(Koboldmaki);
  */
 
 Koboldmaki.prototype.getDomNode = function () {
-  var node;
+  var node
+    , el = this.el;
 
-  if (this.el) {
-      return this.el;
+  if (el) {
+      el.dataset.id = this.id;
+      return el;
   }
 
   node = document.createElement(this.tagName || 'div');
   if (this.className) { 
     classes(node).add(this.className); 
+  }
+
+  if (this.id) {
+    node.dataset.id = this.id;
   }
 
   return node;

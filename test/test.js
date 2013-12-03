@@ -73,6 +73,13 @@ describe('koboldmaki', function () {
         expect(exampleView.wrongHandler).to.be.false;
     });
 
+    it('should has an id', function () {
+        var v = view()
+          , isString = 'string' === typeof v.id;
+
+        isString.should.be.true;
+    });
+
     it('$ should query only for own nodes. nodes from subviews excluded', function () {
         var outer = document.querySelector('.outer-view'),
             inner = document.querySelector('.inner-view'),

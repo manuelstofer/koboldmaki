@@ -10,7 +10,8 @@
     "component/query": "*",
     "manuelstofer/foreach": "*",
     "manuelstofer/claim": "*",
-    "debianw/delegates": "*"
+    "debianw/delegates": "*",
+    "gjohnson/uuid": "*"
   },
   "development": {
     "adamsanderson/trigger-event": "*"
