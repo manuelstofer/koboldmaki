@@ -1,5 +1,6 @@
 {
     "name": "koboldmaki",
+    "repo": "manuelstofer/koboldmaki",
     "description": "views inspired by backbone, built with components only",
     "version": "0.0.3",
     "keywords": [],
