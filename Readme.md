@@ -23,7 +23,7 @@ Koboldmaki is not class based.
 ```Javascript
 var View = require('koboldmaki');
 
-var makiAlert = View({
+var MakiAlert = View.extend({
     events: {
         'clicked a': 'hideInTree'
     },
@@ -41,6 +41,7 @@ var makiAlert = View({
     }
 });
 
+var makiAlert = new MakiAlert();
 document.body.appendChild(makiAlert.el);
 ```
 

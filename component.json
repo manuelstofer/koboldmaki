@@ -1,16 +1,11 @@
 {
     "name": "koboldmaki",
     "repo": "manuelstofer/koboldmaki",
-    "description": "views inspired by backbone, built with components only",
-    "version": "0.0.3",
+    "description": "Views inspired by backbone, built with components only",
+    "version": "0.1.0",
     "keywords": [],
     "dependencies": {
-        "component/event":            "*",
-        "component/emitter":          "*",
-        "component/classes":          "*",
         "component/matches-selector": "*",
-        "component/object":           "*",
-        "component/map":              "*",
         "component/query":            "*",
         "component/group-by":         "*",
         "manuelstofer/foreach":       "*",
@@ -19,8 +14,9 @@
     "development": {
         "adamsanderson/trigger-event": "*"
     },
+    "main": "koboldmaki.js",
     "license": "MIT",
     "scripts": [
-        "index.js"
+        "koboldmaki.js"
     ]
 }
